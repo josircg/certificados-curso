@@ -1,0 +1,5 @@
+Rotina gera certificados com os nomes indicados em um arquivo CSV 
+Para executar, altere o script insert.py
+
+virtualenv /dados/venv/py3
+
