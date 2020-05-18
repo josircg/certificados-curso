@@ -17,7 +17,7 @@ def find_font_file(query):
     matches = []
     for path in fontman.findSystemFonts():
         if query in os.path.basename(path):
-            matches.append( path ) 
+            matches.append(path)
     return matches
 
 
@@ -27,11 +27,11 @@ def tokenize(string):
 
 def gera_pdf(nome):
     font_path = find_font_file("DejaVuSans.ttf")
-    img = Image.open("hd2019.jpg")
+    img = Image.open(local.modelo)
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(font_path[0], 20)
+    font = ImageFont.truetype(font_path[0], local.font_size)
     color = 'rgb(0,0,0)'
-    draw.text((140, 580), nome, fill=color, font=font)
+    draw.text((local.pos_x, local.pos_y), nome, fill=color, font=font)
     filename = tokenize(nome)
     img.save(filename+'.png', optimize=True, quality=20)
     pdf = FPDF(orientation='L', format='A4')
@@ -43,27 +43,29 @@ def gera_pdf(nome):
 
 
 tot_emails = 0
-login = local.smtp['email']
-password = local.smtp['password']
-s = connect(login, password)
+smtp_login = None
+if 'login' in local.smtp:
+    smtp_login = local.smtp['login']
+    password = local.smtp['password']
+    smtp = connect(smtp_login, password)
+
 try:
-    with open('aluno.csv', 'r') as f:
+    with open('alunos.csv', 'r') as f:
         reader = csv.reader(f)
         for aluno in reader:
             file_name = gera_pdf(aluno[0].upper())
-            if len(aluno) > 1:
+            if len(aluno) > 1 and smtp_login:
                 email = aluno[1].strip()
                 is_valid = validate_email(email)
                 if is_valid:
-                    send_mail(s, email, file_name)
                     print(email)
+                    if 'bcc' in local.smtp:
+                        email = [email, local.smtp['bcc']]
+                    send_mail(smtp, local.sender, email, file_name, local.subject)
                     tot_emails += 1
                 else:
                     print('Email inválido: %s' % email)
 finally:
-    s.quit()
-    print('Emails gerados: %d' % tot_emails)
-
-
-
+    smtp.quit()
+    print('Certificados enviados: %d' % tot_emails)
 

@@ -1,6 +1,8 @@
+import local
 import smtplib
-import ssl
-from email.mime.multipart import MIMEMultipart 
+import os
+
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText 
 from email.mime.base import MIMEBase 
 from email import encoders
@@ -12,15 +14,18 @@ def connect(login, password):
     return conn
 
 
-def send_mail(conn, remetente, destino, arquivo):
+def send_mail(conn, remetente, destino, arquivo, subject):
     # instance of MIMEMultipart 
     msg = MIMEMultipart() 
     # storing the senders email address   
     msg['From'] = remetente
-    # storing the receivers email address  
-    msg['To'] = destino
+    # storing the receivers email address
+    if isinstance(destino, list):
+        msg['To'] = destino[0]
+    else:
+        msg['To'] = destino
     # storing the subject  
-    msg['Subject'] = "Certificado Seminário de Humanidades Digitais 2019"
+    msg['Subject'] = subject
   
     # string to store the body of the mail 
     body = "Segue em anexo certificado de participação"
@@ -52,11 +57,16 @@ def send_mail(conn, remetente, destino, arquivo):
 
 
 def test():
-    s = connect()
+    if not os.path.exists('teste.pdf'):
+        print('Arquivo teste.pdf não existe')
+        exit(1)
+    s = connect(local.smtp['login'], local.smtp['password'])
     print('Connected')
-    send_mail(s, 'josircg@yahoo.com.br', 'teste.pdf')
+    send_mail(s, local.sender, 'josircg@gmail.com', 'teste.pdf', 'Teste')
+    print('Email Enviado')
     s.quit()
 
 
 if __name__ == "__main__":
     test()
+    exit(0)

@@ -1,4 +1,8 @@
-Este script gera certificados com os nomes indicados em um arquivo CSV e envia email para cada um deles: 
+Este script gera certificados com os nomes indicados em um arquivo CSV e envia email para cada um deles. 
+
+O arquivo CSV deve vir no formato Nome,Email (delimitado por vírgula).
+
+O arquivo CSV também pode vir apenas com o nome (e nesse caso, não enviará o certificado por email). 
 
 1 ) Instalação
 
@@ -11,9 +15,18 @@ Este script gera certificados com os nomes indicados em um arquivo CSV e envia e
 3 ) Crie o arquivo local.py com os dados de login do SMTP:
 
     smtp = {
-      'login': 'xxxx@gmail.com',
-      'password': 'yyyy'
+        'login': 'xxxx',
+        'password': 'xxxx',
+        'bcc': 'xxxx'
     }
+    
+    sender = 'PPGCI IBICT/UFRJ <ppgci@eco.ufrj.br>'
+    subject = 'Seminário Internacional de Estudos Críticos em Informação'
+    modelo = 'escritos.png'
+    
+    pos_x = 140
+    pos_y = 440
+    font_size = 24
 
 4 ) Altere a posição x,y no script onde o nome do aluno deve aparecer.
 
