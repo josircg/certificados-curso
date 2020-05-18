@@ -1,18 +1,17 @@
 Este script gera certificados com os nomes indicados em um arquivo CSV e envia email para cada um deles. 
 
-O arquivo CSV deve vir no formato Nome,Email (delimitado por vírgula).
-
-O arquivo CSV também pode vir apenas com o nome (e nesse caso, não enviará o certificado por email). 
-
 1 ) Instalação
 
     virtualenv -p python3 <path-venv>
     source <path-venv>/bin/activate
     pip install -r requirements.txt
 
-2 ) Copie o arquivo '''alunos.csv''' e '''certificado.jpg''' para o diretório do script
+2 ) Crie o arquivo '''alunos.csv''' e '''certificado.jpg''' para o diretório do script
 
-3 ) Crie o arquivo local.py com os dados de login do SMTP:
+O arquivo CSV deve vir no formato Nome,Email (delimitado por vírgula). 
+O arquivo CSV também pode vir apenas com o nome mas nesse caso, a rotina não enviará o certificado por email. 
+
+3 ) Crie o arquivo local.py com os dados de login do SMTP e dos dados específicos da sua organização:
 
     smtp = {
         'login': 'xxxx',
@@ -22,19 +21,22 @@ O arquivo CSV também pode vir apenas com o nome (e nesse caso, não enviará o 
     
     sender = 'PPGCI IBICT/UFRJ <ppgci@eco.ufrj.br>'
     subject = 'Seminário Internacional de Estudos Críticos em Informação'
-    modelo = 'escritos.png'
+    modelo = 'certificado.png'
     
-    pos_x = 140
-    pos_y = 440
+    coluna = 140
+    linha = 440
     font_size = 24
 
-4 ) Altere a posição x,y no script onde o nome do aluno deve aparecer.
+A parte mais "chata" da geração do certificado é posicionar o nome no modelo do certificado e gravar as posições em pixels no local.py 
 
-5 ) Execute: python insert.py
+Dicas: Para fazer testes com o posicionamento do nome no seu modelo de certificado, crie um arquivo alunos.csv com apenas o seu nome (sem o email).
 
-Os certificados serão gravados na mesma pasta do script. O email só será enviado se o CSV tiver uma coluna com um email válido. 
+4 ) Execute: python insert.py
 
-###### A fazer
+Os certificados serão gravados na mesma pasta do script. O email só será enviado se o CSV tiver uma coluna com um email válido.
 
-- Parâmetros para definir o arquivo csv e fazer um teste sem enviar o email ou para gerar um único certificado
-- Parametrizar a posição do nome na imagem
+Este pequeno projeto foi criado durante o Seminário Internacional de Humanidades Digitais em 2019 promovido pelo LARHUD (http://larhud.ibict.br)
+ 
+
+ 
+

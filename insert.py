@@ -31,7 +31,7 @@ def gera_pdf(nome):
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(font_path[0], local.font_size)
     color = 'rgb(0,0,0)'
-    draw.text((local.pos_x, local.pos_y), nome, fill=color, font=font)
+    draw.text((local.coluna, local.linha), nome, fill=color, font=font)
     filename = tokenize(nome)
     img.save(filename+'.png', optimize=True, quality=20)
     pdf = FPDF(orientation='L', format='A4')
