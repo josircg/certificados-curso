@@ -6,7 +6,7 @@ Este script gera certificados com os nomes indicados em um arquivo CSV e envia e
     source <path-venv>/bin/activate
     pip install -r requirements.txt
 
-2 ) Crie o arquivo '''alunos.csv''' e '''certificado.jpg''' para o diretório do script
+2 ) Crie o arquivo '''alunos.csv''' e '''certificado.jpg''' no mesmo diretório do script
 
 O arquivo CSV deve vir no formato Nome,Email (delimitado por vírgula). 
 O arquivo CSV também pode vir apenas com o nome mas nesse caso, a rotina não enviará o certificado por email. 
@@ -29,7 +29,7 @@ O arquivo CSV também pode vir apenas com o nome mas nesse caso, a rotina não e
 
 A parte mais "chata" da geração do certificado é posicionar o nome no modelo do certificado e gravar as posições em pixels no local.py 
 
-Dicas: Para fazer testes com o posicionamento do nome no seu modelo de certificado, crie um arquivo alunos.csv com apenas o seu nome (sem o email).
+Dicas: Para fazer testes com o posicionamento do nome no seu modelo de certificado, crie um arquivo alunos.csv com apenas o seu nome (sem o email) e rode o script até que o posicionamento fique do seu agrado.
 
 4 ) Execute: python insert.py
 

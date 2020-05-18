@@ -11,6 +11,7 @@ import csv
 import local
 import matplotlib.font_manager as fontman
 from validate_email import validate_email
+from unidecode import unidecode
 
 
 def find_font_file(query):
@@ -32,7 +33,7 @@ def gera_pdf(nome):
     font = ImageFont.truetype(font_path[0], local.font_size)
     color = 'rgb(0,0,0)'
     draw.text((local.coluna, local.linha), nome, fill=color, font=font)
-    filename = tokenize(nome)
+    filename = unidecode(tokenize(nome))
     img.save(filename+'.png', optimize=True, quality=20)
     pdf = FPDF(orientation='L', format='A4')
     pdf.add_page()
@@ -42,30 +43,35 @@ def gera_pdf(nome):
     return filename+'.pdf'
 
 
-tot_emails = 0
+conn = None
 smtp_login = None
-if 'login' in local.smtp:
+if isinstance(local.smtp, dict) and 'login' in local.smtp:
     smtp_login = local.smtp['login']
     password = local.smtp['password']
-    smtp = connect(smtp_login, password)
+    conn = connect(smtp_login, password)
 
+tot_emails = 0
+tot_certificados = 0
 try:
     with open('alunos.csv', 'r') as f:
         reader = csv.reader(f)
         for aluno in reader:
             file_name = gera_pdf(aluno[0].upper())
-            if len(aluno) > 1 and smtp_login:
-                email = aluno[1].strip()
-                is_valid = validate_email(email)
-                if is_valid:
-                    print(email)
-                    if 'bcc' in local.smtp:
-                        email = [email, local.smtp['bcc']]
-                    send_mail(smtp, local.sender, email, file_name, local.subject)
-                    tot_emails += 1
+            tot_certificados += 1
+            if conn and file_name:
+                if len(aluno) > 1:
+                    email = aluno[1].strip().replace(" ", "")
+                    is_valid = validate_email(email)
+                    if is_valid:
+                        if 'bcc' in local.smtp:
+                            email = [email, local.smtp['bcc']]
+                        send_mail(conn, local.sender, email, file_name, local.subject)
+                        tot_emails += 1
+                    else:
+                        print('Email inválido: %s' % email)
                 else:
-                    print('Email inválido: %s' % email)
+                    print('Email não encontrado na linha ')
 finally:
-    smtp.quit()
+    conn.quit()
+    print('Certificados gerados: %d' % tot_certificados)
     print('Certificados enviados: %d' % tot_emails)
-

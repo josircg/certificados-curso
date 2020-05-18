@@ -34,17 +34,17 @@ def send_mail(conn, remetente, destino, arquivo, subject):
     msg.attach(MIMEText(body, 'plain'))
 
     # open the file to be sent  
-    attachment = open(arquivo, "rb") 
-  
-    # instance of MIMEBase and named as p 
-    p = MIMEBase('application', 'octet-stream') 
-  
+    fp = open(arquivo, "rb")
+    # instance of MIMEBase and named as p
+    p = MIMEBase('application', 'octet-stream')
     # To change the payload into encoded form 
-    p.set_payload(attachment.read())
-  
+    p.set_payload(fp.read())
+    fp.close()
+
     # encode into base64 
-    encoders.encode_base64(p) 
-    p.add_header('Content-Disposition', "attachment; filename= %s" % arquivo) 
+    encoders.encode_base64(p)
+
+    p.add_header('Content-Disposition', 'attachment', filename=arquivo)
   
     # attach the instance 'p' to instance 'msg' 
     msg.attach(p) 
