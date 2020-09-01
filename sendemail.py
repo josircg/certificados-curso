@@ -14,7 +14,7 @@ def connect(login, password):
     return conn
 
 
-def send_mail(conn, remetente, destino, arquivo, subject):
+def send_mail_arquivo(conn, remetente, destino, arquivo, subject):
     # instance of MIMEMultipart 
     msg = MIMEMultipart() 
     # storing the senders email address   
@@ -56,13 +56,33 @@ def send_mail(conn, remetente, destino, arquivo, subject):
     return
 
 
+def send_html_mail(conn, remetente, destino, subject, html):
+    # instance of MIMEMultipart
+    msg = MIMEMultipart()
+    # storing the senders email address
+    msg['From'] = remetente
+    # storing the receivers email address
+    if isinstance(destino, list):
+        msg['To'] = destino[0]
+    else:
+        msg['To'] = destino
+    # storing the subject
+    msg['Subject'] = subject
+
+    # attach the body with the msg instance
+    msg.attach(MIMEText(html, 'html'))
+    text = msg.as_string()
+    conn.sendmail(msg['From'], destino, text)
+    return
+
+
 def test():
     if not os.path.exists('teste.pdf'):
         print('Arquivo teste.pdf não existe')
         exit(1)
     s = connect(local.smtp['login'], local.smtp['password'])
     print('Connected')
-    send_mail(s, local.sender, 'josircg@gmail.com', 'teste.pdf', 'Teste')
+    send_mail_arquivo(s, local.sender, 'josircg@gmail.com', 'Teste', 'data/aviso.html')
     print('Email Enviado')
     s.quit()
 

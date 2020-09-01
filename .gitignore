@@ -1,9 +1,11 @@
 .idea
 emitidos
+data
 *.jpg
 *.csv
 __pycache__/
 *.py[cod]
 *$py.class
+*.png
 .cache
 local.py
