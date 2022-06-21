@@ -2,7 +2,7 @@ cycler==0.10.0
 fpdf
 kiwisolver==1.1.0
 matplotlib
-numpy==1.17.3
+numpy==1.22.0
 Pillow
 py3dns==3.2.1
 pyparsing==2.4.4
